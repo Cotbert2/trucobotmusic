@@ -1,10 +1,15 @@
-const { joinVoiceChannel, createAudioPlayer, createAudioResource, NoSubscriberBehavior,  } = require('@discordjs/voice');
+const { joinVoiceChannel, createAudioPlayer, createAudioResource, NoSubscriberBehavior, AudioPlayerStatus,  } = require('@discordjs/voice');
 const {Client, REST, Routes, GatewayIntentBits, LimitedCollection, ButtonBuilder, EmbedBuilder, ActionRowBuilder, ActionRow, ButtonStyle} = require('discord.js');
 const { execScrapper } = require('./fetcher');
 const path = require('path');
-const { playAudioFile, downloadFileByYoutubeURL } = require('./audioMaker');
+const { playAudioFile, downloadFileByYoutubeURL, enQueueSong } = require('./audioMaker');
 
 let connection;
+
+let isPlaying = false;
+let songsQueue = [];
+
+
 
 const greeting =  async message => {
     if (message.author.bot) return;
@@ -45,7 +50,8 @@ const play = async (interaction) => {
     const playFile = await downloadFileByYoutubeURL(url);
     console.log('path audio file');
     console.log(path.join(__dirname,'/../' + playFile + '.mp3'));
-    playAudioFile(connection, path.join(__dirname,'/../' + playFile + '.mp3'));
+    enQueueSong(connection, path.join(__dirname,'/../' + playFile + '.mp3'));
+    //playAudioFile( connection, path.join(__dirname,'/../' + playFile + '.mp3'));
 }
 
 const playSearch = async (interaction) => {
@@ -90,7 +96,7 @@ const playSongByButtonEvent = async (interaction) => {
     const playFile = await downloadFileByYoutubeURL(url);
     console.log('path audio file');
     console.log(path.join(__dirname,'/../' + playFile + '.mp3'));
-    playAudioFile(connection,path.join(__dirname,'/../' + playFile + '.mp3'));
+    playAudioFile( connection,path.join(__dirname,'/../' + playFile + '.mp3'));
 }
 
 const connectToVoiceChannel = async (interaction) => {

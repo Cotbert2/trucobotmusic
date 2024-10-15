@@ -7,11 +7,10 @@ const dotenv = require('dotenv');
 const { connect, disconnect, play, playSearch, playSongByButtonEvent } = require('./response');
 
 
-let songsQueue = [];
-
 //setup dotenv
 dotenv.config();
 
+let connection;
 
 const client = new Client(
     { intents :
