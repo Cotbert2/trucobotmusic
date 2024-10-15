@@ -1,4 +1,3 @@
-
 const getFileName = (url) => {
     return `./audio/${url.substring(32)}`;
 }
@@ -10,7 +9,8 @@ const shortName = (name) => {
 }
 
 
-//export function 
+
+//export function
 module.exports = {
     getFileName,
     shortName

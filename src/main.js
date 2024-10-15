@@ -1,53 +1,33 @@
-const puppeteer = require ('puppeteer');
-const scrapper = require('./scrapper');
+const fetcher = require('./fetcher');
+const bot = require('./bot');
+const dotenv = require('dotenv');
 
-//create a Singleton for puppeteer trying to reduce memory consume
-let browser;
-let page;
+const fs = require('fs');
+const path = require('path');
 
-const openBrowser = async () => {
-    //singleton
-    if(browser) return;
-    browser = await puppeteer.launch(
-        {
-            //TODO: change to headless true in production
-            headless : true
-        });
-    page = await browser.newPage();
+//require('./commands');
 
+dotenv.config();
+
+fetcher.openBrowser();
+
+bot.login(process.env.TOKEN);
+
+//check when script is killed
+const deleteAudioFolderContent  = () => {
+    const directory = './audio';
+    const fileList = fs.readdirSync(directory);
+    for (const file of fileList) {
+        console.log(`Deleting ${file}`);
+        fs.unlinkSync(path.join(directory, file));
+    }
 }
 
-const visitPage = async (url) => {
-    await page.goto(url);
-    await page.waitForSelector('ytd-video-renderer', { timeout: 5000 });
+process.on('exit', () => {
+    fetcher.closeBrowser();
+    deleteAudioFolderContent();
+    console.log('Happy hacking');
+})
 
-    const videos = await page.evaluate(() => {
-        let videosSeachResult = [];
-        const elements = document.querySelectorAll('ytd-video-renderer');
 
-        elements.forEach(element => {
-            let video = {
-                title: element.querySelector('#video-title').innerText,
-                url: element.querySelector('#video-title').href
-            }
-            videosSeachResult.push(video);
-        });
-        return videosSeachResult;
-    });
-    return videos;
-}
-
-const execScrapper = async (search) => {
-    await openBrowser();
-    let infoPage = await visitPage(scrapper.generateQuery(search));
-    return infoPage;
-
-}
-
-//setup browser
-openBrowser();
-
-module.exports = {
-    execScrapper
-}
 

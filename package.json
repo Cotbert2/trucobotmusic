@@ -4,6 +4,7 @@
   "description": "A super-duper-cool discord music bot, for free, because free stuff is cool, isn't it?",
   "main": "index.js",
   "scripts": {
+    "start": "node src/main.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
