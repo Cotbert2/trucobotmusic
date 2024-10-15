@@ -1,7 +1,9 @@
 const { joinVoiceChannel, createAudioPlayer, createAudioResource, NoSubscriberBehavior, AudioPlayerStatus,  } = require('@discordjs/voice');
-const {Client, REST, Routes, GatewayIntentBits, LimitedCollection, ButtonBuilder, EmbedBuilder, ActionRowBuilder, ActionRow, ButtonStyle} = require('discord.js');
+const {Client, REST, Routes, GatewayIntentBits, LimitedCollection, ButtonBuilder, EmbedBuilder, ActionRowBuilder, ActionRow, ButtonStyle, Utils} = require('discord.js');
 const { execScrapper } = require('./fetcher');
 const path = require('path');
+
+const { isYoutubeLink } = require('./utils');
 const { 
     player, playAudioFile, downloadFileByYoutubeURL, enQueueSong 
     ,songsQueue
@@ -44,9 +46,11 @@ const disconnect = async (interaction) => {
 }
 
 const play = async (interaction) => {
+    const url = interaction.options._hoistedOptions[0].value;
+    if (!isYoutubeLink(url)) return interaction.reply('Ups!! parece ser que no se trata de un link de youtube');
+
     interaction.reply('We are checking the song, please wait a moment');
 
-    const url = interaction.options._hoistedOptions[0].value;
     console.log(`URL: ${url}`);
 
     const playFile = await downloadFileByYoutubeURL(url);
@@ -138,6 +142,7 @@ const resume = async (interaction) => {
 }
 
 const queue = async (interaction) => {
+    if(songsQueue.length === 0) return interaction.reply('La cola se encuentra vacía por ahora ( ͡° ͜ʖ ͡°)');
     let response = 'Cola de canciones\n';
     songsQueue.map((song, index) => {
         response += `${index + 1} - ${song}\n`;

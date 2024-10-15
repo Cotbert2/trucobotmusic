@@ -9,7 +9,9 @@ const shortName = (name) => {
 }
 
 const isYoutubeLink = (email) => {
-
+    //regex to validate youtube link, therefore begins with https://www.youtube.com/watch?v=
+    const regex = new RegExp('^(https://www.youtube.com/watch\\?v=)');
+    return regex.test(email);
 }
 
 //export function
