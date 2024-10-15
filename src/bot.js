@@ -4,7 +4,11 @@ const {Client, REST, Routes, GatewayIntentBits, LimitedCollection, ButtonBuilder
 const path = require('path');
 const dotenv = require('dotenv');
 
-const { connect, disconnect, play, playSearch, playSongByButtonEvent } = require('./response');
+const {
+    connect, disconnect, play,
+    playSearch, playSongByButtonEvent, pause
+    ,resume, queue, greeting, skip,clearQueue
+} = require('./response');
 
 
 //setup dotenv
@@ -48,7 +52,12 @@ client.on('interactionCreate', async interaction => {
         'connect': async () => connect(interaction),
         'disconnect': async () => disconnect(interaction),
         'play': async () => play(interaction),
-        'play-search': async () => playSearch(interaction)
+        'play-search': async () => playSearch(interaction),
+        'pause' : async () => pause(interaction),
+        'resume' : async () => resume(interaction),
+        'skip' : async () => skip(interaction),
+        'queue' : async () => queue(interaction),
+        'clear-queue' : async () => clearQueue(interaction),
     }
 
     actions[commandName]();

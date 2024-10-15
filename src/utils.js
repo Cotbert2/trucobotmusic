@@ -8,8 +8,13 @@ const shortName = (name) => {
     }
 }
 
+const isYoutubeLink = (email) => {
+
+}
+
 //export function
 module.exports = {
     getFileName,
-    shortName
+    shortName,
+    isYoutubeLink
 }

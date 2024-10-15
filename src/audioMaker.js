@@ -68,7 +68,7 @@ const downloadFileByYoutubeURL = async (url) => {
 
 const playAudioFile = async ( connection, path) => {
     console.log(`Queue: ${songsQueue}`);
-    console.log('Playing audio file');
+    console.log(`Playing audio file ${path}`);
     const resource = createAudioResource(path);
     player.play(resource);
     connection.subscribe(player);
@@ -79,7 +79,9 @@ const playAudioFile = async ( connection, path) => {
 module.exports = {
     downloadFileByYoutubeURL,
     enQueueSong,
-    playAudioFile
+    playAudioFile,
+    player,
+    songsQueue
 }
 
 

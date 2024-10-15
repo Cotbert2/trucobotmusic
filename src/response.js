@@ -2,12 +2,14 @@ const { joinVoiceChannel, createAudioPlayer, createAudioResource, NoSubscriberBe
 const {Client, REST, Routes, GatewayIntentBits, LimitedCollection, ButtonBuilder, EmbedBuilder, ActionRowBuilder, ActionRow, ButtonStyle} = require('discord.js');
 const { execScrapper } = require('./fetcher');
 const path = require('path');
-const { playAudioFile, downloadFileByYoutubeURL, enQueueSong } = require('./audioMaker');
+const { 
+    player, playAudioFile, downloadFileByYoutubeURL, enQueueSong 
+    ,songsQueue
+} = require('./audioMaker');
 
 let connection;
 
 let isPlaying = false;
-let songsQueue = [];
 
 
 
@@ -106,11 +108,53 @@ const connectToVoiceChannel = async (interaction) => {
         adapterCreator: interaction.guild.voiceAdapterCreator
     });
 }
+
+const skip = async (interaction) => {
+    if(songsQueue.length === 0 && !player.state.status === AudioPlayerStatus.Playing){
+        interaction.reply('No hay ninguna canción en la cola, no seas imbécil');
+        return;
+    }
+    player.stop();
+    interaction.reply('Saltando la canción');
+}
+
+const pause = async (interaction) => {
+    //check if the player is playing
+    if (!player.state.status === AudioPlayerStatus.Playing){
+        interaction.reply('No se está reproduciendo ninguna canción, no seas imbécil');
+        return;
+    }
+    player.pause();
+    interaction.reply('Pausando la canción');
+}
+
+const resume = async (interaction) => {
+    if (!player.state.status === AudioPlayerStatus.Paused){
+        interaction.reply('No hat ninguna canción para reanudar, no seas imbécil');
+        return;
+    }
+    interaction.reply('Reanundando la canción');
+    player.unpause();
+}
+
+const queue = async (interaction) => {
+    let response = 'Cola de canciones\n';
+    songsQueue.map((song, index) => {
+        response += `${index + 1} - ${song}\n`;
+    });
+    interaction.reply(response);
+}
+
+const clearQueue = async (interaction) => {
+    songsQueue = [];
+    interaction.reply('Cola de canciones limpiada');
+}
+
+
+
 module.exports = {
-    greeting,
-    connect,
-    disconnect,
-    play,
-    playSearch,
-    playSongByButtonEvent 
+    greeting,connect, disconnect,
+    play,playSearch,pause,
+    playSongByButtonEvent,resume,queue,
+    clearQueue, skip
 }
