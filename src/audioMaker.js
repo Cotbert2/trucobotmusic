@@ -25,6 +25,7 @@ const downloadFileByYoutubeURL = async (url) => {
 }
 
 const playAudioFile = async (connection, path) => {
+    console.log('Playing audio file');
     const player = createAudioPlayer(
         {
             behaviors: {

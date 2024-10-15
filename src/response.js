@@ -1,7 +1,10 @@
 const { joinVoiceChannel, createAudioPlayer, createAudioResource, NoSubscriberBehavior,  } = require('@discordjs/voice');
 const {Client, REST, Routes, GatewayIntentBits, LimitedCollection, ButtonBuilder, EmbedBuilder, ActionRowBuilder, ActionRow, ButtonStyle} = require('discord.js');
+const { execScrapper } = require('./fetcher');
 const path = require('path');
-const {audioMaker, downloadFileByYoutubeURL } = require('./audioMaker');
+const { playAudioFile, downloadFileByYoutubeURL } = require('./audioMaker');
+
+let connection;
 
 const greeting =  async message => {
     if (message.author.bot) return;
@@ -11,12 +14,7 @@ const greeting =  async message => {
 
 const connect = async (interaction) => {
     if(interaction.member.voice.channel) {
-        connection = joinVoiceChannel({
-           channelId: interaction.member.voice.channel.id,
-           guildId: interaction.guildId,
-           adapterCreator: interaction.guild.voiceAdapterCreator
-       });
-
+        connectToVoiceChannel(interaction);
        interaction.reply('Me he pulso-conectado a tu canal de voz ;)');
    } else {
        interaction.reply('Únete primero a un canal de voz, no seas mamon');
@@ -39,7 +37,6 @@ const disconnect = async (interaction) => {
 }
 
 const play = async (interaction) => {
-
     interaction.reply('We are checking the song, please wait a moment');
 
     const url = interaction.options._hoistedOptions[0].value;
@@ -47,13 +44,13 @@ const play = async (interaction) => {
 
     const playFile = await downloadFileByYoutubeURL(url);
     console.log('path audio file');
-    console.log(path.join(__dirname, playFile + '.mp3'));
-    playAudioFile(connection, path.join(__dirname, playFile + '.mp3'));
+    console.log(path.join(__dirname,'/../' + playFile + '.mp3'));
+    playAudioFile(connection, path.join(__dirname,'/../' + playFile + '.mp3'));
 }
 
 const playSearch = async (interaction) => {
     await interaction.reply('Listo!, buscaré tu canción (˶ᵔ ᵕ ᵔ˶) ');
-    const searchResult = await fullScrapper.execScrapper(interaction.options._hoistedOptions[0].value);
+    const searchResult = await execScrapper(interaction.options._hoistedOptions[0].value);
     console.log('Search result');
     console.log(searchResult);
     //send message without reply
@@ -81,10 +78,33 @@ const playSearch = async (interaction) => {
     await interaction.followUp({embeds: [embed] , components: [options]});
 }
 
+const playSongByButtonEvent = async (interaction) => {
+    //check if user is in a voice channel
+    if(!interaction.member.voice.channel)
+        return interaction.reply('Únete primero a un canal de voz, no seas mamon');
+    //join to the channel
+    await connectToVoiceChannel(interaction);
+    interaction.reply('Ok! vamos a reproducir tu canción');
+    const url = interaction.customId;
+    console.log(`URL: ${url}`);
+    const playFile = await downloadFileByYoutubeURL(url);
+    console.log('path audio file');
+    console.log(path.join(__dirname,'/../' + playFile + '.mp3'));
+    playAudioFile(connection,path.join(__dirname,'/../' + playFile + '.mp3'));
+}
+
+const connectToVoiceChannel = async (interaction) => {
+    connection = joinVoiceChannel({
+        channelId: interaction.member.voice.channel.id,
+        guildId: interaction.guildId,
+        adapterCreator: interaction.guild.voiceAdapterCreator
+    });
+}
 module.exports = {
     greeting,
     connect,
     disconnect,
     play,
-    playSearch
+    playSearch,
+    playSongByButtonEvent 
 }

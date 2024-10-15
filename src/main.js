@@ -27,7 +27,7 @@ process.on('exit', () => {
     fetcher.closeBrowser();
     deleteAudioFolderContent();
     console.log('Happy hacking');
-})
+});
 
 
 

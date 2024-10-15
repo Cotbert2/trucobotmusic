@@ -8,8 +8,6 @@ const shortName = (name) => {
     }
 }
 
-
-
 //export function
 module.exports = {
     getFileName,
