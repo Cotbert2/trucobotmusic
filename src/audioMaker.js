@@ -13,13 +13,17 @@ let connectionUsage;
 let isPlaying = false;
 let songsQueue = [];
 
-const enQueueSong = (connection, song) => {
+const enQueueSong = (videoTitle, connection, song) => {
     connectionUsage = connection;
-    songsQueue.push(song);
-    //start playing
+    songsQueue.push(
+        {
+            song : song,
+            title: videoTitle
+        });
+        console.log('video title' + videoTitle);
     if( songsQueue.length === 1 && !isPlaying) {
         const currentSong = songsQueue.shift();
-        playAudioFile(connection, currentSong);
+        playAudioFile(connection, currentSong.song);
     }
 }
 
@@ -44,13 +48,14 @@ player.on(AudioPlayerStatus.Idle, () => {
     console.log('Audio player is idle!!');
     if (songsQueue.length > 0) {
         const song = songsQueue.shift();
-        playAudioFile(connectionUsage, song);
+        playAudioFile(connectionUsage, song.song);
     }
 });
 
 
 const downloadFileByYoutubeURL = async (url) => {
     const fileName =  utils.getFileName(url);
+    let videoTitle = '';
     await ytdl(url, {
         output: fileName,
         extractAudio: true,
@@ -62,7 +67,21 @@ const downloadFileByYoutubeURL = async (url) => {
         console.error(err);
     });
 
-    return fileName;
+    //get video title
+    await ytdl(url, {
+        dumpJson: true
+    }).then(output => {
+        videoTitle = output.title;
+    }).catch(err => {
+        console.error(err);
+    });
+
+    console.log(`Video title: ${videoTitle}`);
+
+    return {
+        fileName,
+        videoTitle
+    };
 }
 
 

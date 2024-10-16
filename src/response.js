@@ -49,14 +49,15 @@ const play = async (interaction) => {
     const url = interaction.options._hoistedOptions[0].value;
     if (!isYoutubeLink(url)) return interaction.reply('Ups!! parece ser que no se trata de un link de youtube');
 
-    interaction.reply('We are checking the song, please wait a moment');
+    interaction.reply('Estoy procesando tu solicitud, por favor espera un momento 7w7');
 
     console.log(`URL: ${url}`);
 
-    const playFile = await downloadFileByYoutubeURL(url);
+    const { fileName, videoTitle} = await downloadFileByYoutubeURL(url);
     console.log('path audio file');
-    console.log(path.join(__dirname,'/../' + playFile + '.mp3'));
-    enQueueSong(connection, path.join(__dirname,'/../' + playFile + '.mp3'));
+    console.log(path.join(__dirname,'/../' + fileName + '.mp3'));
+    enQueueSong(videoTitle, connection, path.join(__dirname,'/../' + fileName + '.mp3'));
+    interaction.followUp(`Listo! he agregado '${videoTitle}' a la cola de reproducción`);
     //playAudioFile( connection, path.join(__dirname,'/../' + playFile + '.mp3'));
 }
 
@@ -143,9 +144,10 @@ const resume = async (interaction) => {
 
 const queue = async (interaction) => {
     if(songsQueue.length === 0) return interaction.reply('La cola se encuentra vacía por ahora ( ͡° ͜ʖ ͡°)');
-    let response = 'Cola de canciones\n';
+    let response = 'Cola de reproducción\n';
     songsQueue.map((song, index) => {
-        response += `${index + 1} - ${song}\n`;
+        response += `${index + 1} - ${song.title}\n`;
+        console.log(song)
     });
     interaction.reply(response);
 }
