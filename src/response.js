@@ -3,10 +3,14 @@ const {Client, REST, Routes, GatewayIntentBits, LimitedCollection, ButtonBuilder
 const { execScrapper } = require('./fetcher');
 const path = require('path');
 
-const { isYoutubeLink } = require('./utils');
-const { 
-    player, playAudioFile, downloadFileByYoutubeURL, enQueueSong 
-    ,songsQueue
+const { isYoutubeLink, isYoutubeLinkFormMobileDevice } = require('./utils');
+
+const {
+    player,
+    playAudioFile,
+    downloadFileByYoutubeURL,
+    enQueueSong,
+    songsQueue
 } = require('./audioMaker');
 
 let connection;
@@ -18,6 +22,14 @@ let isPlaying = false;
 const greeting =  async message => {
     if (message.author.bot) return;
     if (message.content == 'hi') message.reply('pulso');
+}
+
+//shitpost
+
+const shitpost = async message => {
+    if (message.author.bot) return;
+    if (message.content == 'eso') message.reply('Kariel');
+
 }
 
 
@@ -46,12 +58,14 @@ const disconnect = async (interaction) => {
 }
 
 const play = async (interaction) => {
-    const url = interaction.options._hoistedOptions[0].value;
-    if (!isYoutubeLink(url)) return interaction.reply('Ups!! parece ser que no se trata de un link de youtube');
+    let url = interaction.options._hoistedOptions[0].value;
+    if (!isYoutubeLink(url) && !isYoutubeLinkFormMobileDevice(url)) return interaction.reply('Ups!! parece ser que no se trata de un link de youtube');
 
     interaction.reply('Estoy procesando tu solicitud, por favor espera un momento 7w7');
 
     console.log(`URL: ${url}`);
+    if(isYoutubeLinkFormMobileDevice(url))
+        url = url.replace('https://youtu.be/', 'https://www.youtube.com/watch?v=');
 
     const { fileName, videoTitle} = await downloadFileByYoutubeURL(url);
     console.log('path audio file');
@@ -100,10 +114,11 @@ const playSongByButtonEvent = async (interaction) => {
     interaction.reply('Ok! vamos a reproducir tu canción');
     const url = interaction.customId;
     console.log(`URL: ${url}`);
-    const playFile = await downloadFileByYoutubeURL(url);
+    const { fileName, videoTitle} = await downloadFileByYoutubeURL(url);
     console.log('path audio file');
-    console.log(path.join(__dirname,'/../' + playFile + '.mp3'));
-    playAudioFile( connection,path.join(__dirname,'/../' + playFile + '.mp3'));
+    console.log(path.join(__dirname,'/../' + fileName + '.mp3'));
+    enQueueSong(videoTitle, connection,path.join(__dirname,'/../' + fileName + '.mp3'));
+    interaction.followUp(`Listo! he agregado '${videoTitle}' a la cola de reproducción`);
 }
 
 const connectToVoiceChannel = async (interaction) => {

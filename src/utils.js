@@ -8,15 +8,20 @@ const shortName = (name) => {
     }
 }
 
-const isYoutubeLink = (email) => {
-    //regex to validate youtube link, therefore begins with https://www.youtube.com/watch?v=
+const isYoutubeLink = (url) => {
     const regex = new RegExp('^(https://www.youtube.com/watch\\?v=)');
-    return regex.test(email);
+    return (regex.test(url));
+}
+
+const isYoutubeLinkFormMobileDevice = (url) => {
+    const regex = new RegExp('^(https://youtu.be/)');
+    return (regex.test(url));
 }
 
 //export function
 module.exports = {
     getFileName,
     shortName,
-    isYoutubeLink
+    isYoutubeLink,
+    isYoutubeLinkFormMobileDevice
 }
