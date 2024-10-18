@@ -1,3 +1,5 @@
+const { EmbedBuilder, Embed} = require('discord.js');
+
 const getFileName = (url) => {
     return `./audio/${url.substring(32)}`;
 }
@@ -18,10 +20,21 @@ const isYoutubeLinkFormMobileDevice = (url) => {
     return (regex.test(url));
 }
 
+const prettierMessage = (title, desciption) => {
+    return new EmbedBuilder()
+        .setTitle(title)
+        .setDescription(desciption)
+        .setColor('Blue')
+        .setFooter({
+            text: 'By: truco-bot ;D'
+        })
+}
+
 //export function
 module.exports = {
     getFileName,
     shortName,
     isYoutubeLink,
-    isYoutubeLinkFormMobileDevice
+    isYoutubeLinkFormMobileDevice,
+    prettierMessage
 }

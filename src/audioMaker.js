@@ -1,8 +1,8 @@
 //dependencies
 const ytdl = require('youtube-dl-exec');
 const utils = require('./utils');
-const { joinVoiceChannel, createAudioPlayer, createAudioResource, NoSubscriberBehavior, AudioPlayerStatus,  } = require('@discordjs/voice');
-const {Client, REST, Routes, GatewayIntentBits, LimitedCollection, ButtonBuilder, EmbedBuilder, ActionRowBuilder, ActionRow, ButtonStyle} = require('discord.js');
+const { createAudioPlayer, createAudioResource, NoSubscriberBehavior, AudioPlayerStatus} = require('@discordjs/voice');
+
 //TODO: Check better options to download audio
 
 //start timer

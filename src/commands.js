@@ -1,5 +1,5 @@
 
-const {Client, REST, Routes, GatewayIntentBits, LimitedCollection} = require('discord.js');
+const { REST, Routes } = require('discord.js');
 const dotenv = require('dotenv');
 dotenv.config();
 
@@ -26,7 +26,8 @@ const commands = [
             type: 3,
             required: true
         }]
-    }, {
+    }, 
+    {
         name: 'play-search',
         description: 'Play a song by searching on youtube',
         options: [{
@@ -38,16 +39,20 @@ const commands = [
     }, {
         name: 'skip',
         description: 'Skip the current song'
-    }, {
+    }, 
+    {
         name: 'pause',
         description: 'Pause the current song'
-    }, {
+    }, 
+    {
         name: 'resume',
         description: 'Resume the current song'
-    }, {
+    }, 
+    {
         name: 'queue',
         description: 'Show the current queue'
-    }, {
+    },
+    {
         name: 'clear-queue',
         description: 'Clear the current queue'
     }

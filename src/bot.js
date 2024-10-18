@@ -1,7 +1,5 @@
 
-const { joinVoiceChannel, createAudioPlayer, createAudioResource, NoSubscriberBehavior,  } = require('@discordjs/voice');
-const {Client, REST, Routes, GatewayIntentBits, LimitedCollection, ButtonBuilder, EmbedBuilder, ActionRowBuilder, ActionRow, ButtonStyle} = require('discord.js');
-const path = require('path');
+const {Client, GatewayIntentBits } = require('discord.js');
 const dotenv = require('dotenv');
 
 const {
@@ -32,10 +30,14 @@ client.on('ready', () => {
     });
 });
 
+
+
+//defaul responses
+
 client.on('messageCreate', async message => {
-    if (message.author.bot) return;
-    if (message.content == 'hi') message.reply('pulso');
-})
+    greeting(message);
+    //shitpost(message);
+});
 
 
 client.on('interactionCreate', async interaction => {
