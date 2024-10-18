@@ -97,7 +97,7 @@ const playSearch = async (interaction) => {
         options.addComponents(
             new ButtonBuilder()
             .setCustomId(item.url)
-            .setLabel( (item.title.length > 20) ? item.title : item.title.substring(0, 20))
+            .setLabel( (item.title.length <= 50) ? item.title : item.title.substring(0, 20))
             .setStyle(ButtonStyle.Primary)
         );
     });
