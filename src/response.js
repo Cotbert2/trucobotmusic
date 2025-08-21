@@ -12,6 +12,8 @@ const {
     songsQueue
 } = require('./audioMaker');
 
+import { responses_ES } from './config/consants';
+
 let connection;
 
 
@@ -43,7 +45,7 @@ const connect = async (interaction) => {
        });
    } else {
     interaction.reply({
-        embeds: [prettierMessage('Error', 'Únete primero a un canal de voz, no seas mamon')],
+        embeds: [prettierMessage(responses_ES.ERROR_TITLE, responses_ES)],
     })
    }
 }
@@ -58,11 +60,11 @@ const disconnect = async (interaction) => {
 
        connection.destroy();
        interaction.reply({
-        embeds: [prettierMessage('Desconectado', 'Me he mewin-desconectado de tu canal de voz ;)')],
+        embeds: [prettierMessage(responses_ES.DISCONNECTED_TITLE, responses_ES.DISCONNECTED_DESC)],
        });
    } else {
     interaction.reply({
-        embeds: [prettierMessage('Error', 'Únete primero a un canal de voz, no seas mamon')],
+        embeds: [prettierMessage(responses_ES.ERROR_TITLE, responses_ES.NOT_JOINED_CHANNEL)],
     })
     }
 }
@@ -70,11 +72,11 @@ const disconnect = async (interaction) => {
 const play = async (interaction) => {
     let url = interaction.options._hoistedOptions[0].value;
     if (!isYoutubeLink(url) && !isYoutubeLinkFormMobileDevice(url)) return interaction.reply({
-        embeds: [prettierMessage('Error', 'Por favor ingresa ')],
+        embeds: [prettierMessage(responses_ES.ERROR_TITLE, responses_ES.PLAY_ERROR)],
     });
 
     interaction.reply({
-        embeds: [prettierMessage('Reproductor', 'Estoy procesando tu solicitud, por favor espera un momento 7w7 ')],
+        embeds: [prettierMessage(responses_ES.PLAYER, responses_ES.PROCESSING)],
     })
 
     console.log(`URL: ${url}`);
