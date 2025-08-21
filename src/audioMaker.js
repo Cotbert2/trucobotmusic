@@ -1,8 +1,11 @@
 //dependencies
 const ytdl = require('youtube-dl-exec');
 const utils = require('./utils');
+const fs = require('fs');
 const { createAudioPlayer, createAudioResource, NoSubscriberBehavior, AudioPlayerStatus} = require('@discordjs/voice');
+const dotenv = require('dotenv');
 
+dotenv.config();
 //TODO: Check better options to download audio
 
 //start timer
@@ -54,12 +57,19 @@ player.on(AudioPlayerStatus.Idle, () => {
 
 
 const downloadFileByYoutubeURL = async (url) => {
+    if(!fs.existsSync(utils.getFileName(process.env.COOKIES_TXT_FILE_PATH))) 
+        throw new Error('Cookies file not found. Please create a cookies.txt file with your YouTube session cookies.');
+
     const fileName =  utils.getFileName(url);
     let videoTitle = '';
     await ytdl(url, {
         output: fileName,
         extractAudio: true,
         audioFormat: 'mp3',
+        cookies: process.env.COOKIES_TXT_FILE_PATH,
+        extractorArgs: 'youtube:player_client=android,web,web_embedded,ios',
+        userAgent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36',
+
     }).then(output => {
         console.log(output);
         console.timeEnd('download');
@@ -102,5 +112,3 @@ module.exports = {
     player,
     songsQueue
 }
-
-

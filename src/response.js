@@ -210,7 +210,7 @@ const queue = async (interaction) => {
 const clearQueue = async (interaction) => {
     songsQueue = [];
     interaction.reply({
-        embeds: [prettierMessage('Cola de Reproducción', 'Cola de canciones limpiada')]
+        embeds: [prettierMessage(responses_ES.QUEUE_TITLE, 'Cola de canciones limpiada')]
     });
 }
 

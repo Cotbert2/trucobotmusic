@@ -5,6 +5,7 @@ export const responses_ES = {
     DISCONNECTED_DESC : 'Me he mewin-desconectado de tu canal de voz ;)',
     PLAY_ERROR : 'Por favor ingresa una URL, si quieres hacer busquedas usa /play',
     PLAYER : 'Reproductor',
-    PROCESSING : 'Estoy procesando tu solicitud, por favor espera un momento 7w7'
+    PROCESSING : 'Estoy procesando tu solicitud, por favor espera un momento 7w7',
+    QUEUE_TITLE : 'Cola de Reproducción'
 
 };
