@@ -57,7 +57,7 @@ player.on(AudioPlayerStatus.Idle, () => {
 
 
 const downloadFileByYoutubeURL = async (url) => {
-    if(!fs.existsSync(utils.getFileName(process.env.COOKIES_TXT_FILE_PATH))) 
+    if(!fs.existsSync(process.env.COOKIES_TXT_FILE_PATH))
         throw new Error('Cookies file not found. Please create a cookies.txt file with your YouTube session cookies.');
 
     const fileName =  utils.getFileName(url);
