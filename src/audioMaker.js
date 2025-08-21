@@ -8,9 +8,17 @@ const dotenv = require('dotenv');
 dotenv.config();
 //TODO: Check better options to download audio
 
-//start timer
-console.time('download');
 
+
+if(!fs.existsSync(process.env.COOKIES_TXT_FILE_PATH))
+    throw new Error('Cookies file not found. Please create a cookies.txt file with your YouTube session cookies.');
+
+
+const cookieConfig = {
+    cookies: process.env.COOKIES_TXT_FILE_PATH,
+    extractorArgs: 'youtube:player_client=android,web,web_embedded,ios',
+    userAgent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36',
+}
 
 let connectionUsage;
 let isPlaying = false;
@@ -57,8 +65,6 @@ player.on(AudioPlayerStatus.Idle, () => {
 
 
 const downloadFileByYoutubeURL = async (url) => {
-    if(!fs.existsSync(process.env.COOKIES_TXT_FILE_PATH))
-        throw new Error('Cookies file not found. Please create a cookies.txt file with your YouTube session cookies.');
 
     const fileName =  utils.getFileName(url);
     let videoTitle = '';
@@ -66,9 +72,7 @@ const downloadFileByYoutubeURL = async (url) => {
         output: fileName,
         extractAudio: true,
         audioFormat: 'mp3',
-        cookies: process.env.COOKIES_TXT_FILE_PATH,
-        extractorArgs: 'youtube:player_client=android,web,web_embedded,ios',
-        userAgent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36',
+        ...cookieConfig
 
     }).then(output => {
         console.log(output);
@@ -79,7 +83,8 @@ const downloadFileByYoutubeURL = async (url) => {
 
     //get video title
     await ytdl(url, {
-        dumpJson: true
+        dumpJson: true,
+        ...cookieConfig
     }).then(output => {
         videoTitle = output.title;
     }).catch(err => {
