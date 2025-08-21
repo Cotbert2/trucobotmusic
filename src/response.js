@@ -12,7 +12,7 @@ const {
     songsQueue
 } = require('./audioMaker');
 
-const { responses_ES } = require( './config/consants');
+const { responses_ES } = require( './config/consants/strings_ES');
 
 let connection;
 
