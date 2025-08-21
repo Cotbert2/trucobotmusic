@@ -20,6 +20,13 @@ const isYoutubeLinkFormMobileDevice = (url) => {
     return (regex.test(url));
 }
 
+const cleanYoutubeURL = (url) => {
+    const appPosition = url.search("&");
+    return url.substring(
+        32, appPosition > 0 ? appPosition : url.length - 1
+    )
+}
+
 const prettierMessage = (title, desciption) => {
     return new EmbedBuilder()
         .setTitle(title)
@@ -36,5 +43,6 @@ module.exports = {
     shortName,
     isYoutubeLink,
     isYoutubeLinkFormMobileDevice,
-    prettierMessage
+    prettierMessage,
+    cleanYoutubeURL
 }

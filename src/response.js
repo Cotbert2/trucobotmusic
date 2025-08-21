@@ -3,7 +3,7 @@ const {ButtonBuilder, EmbedBuilder, ActionRowBuilder,  ButtonStyle } = require('
 const { execScrapper } = require('./fetcher');
 const path = require('path');
 
-const { isYoutubeLink, isYoutubeLinkFormMobileDevice, prettierMessage } = require('./utils');
+const { isYoutubeLink, isYoutubeLinkFormMobileDevice, prettierMessage , cleanYoutubeURL} = require('./utils');
 
 const {
     player,
@@ -104,7 +104,7 @@ const playSearch = async (interaction) => {
         .setTitle('Resultados de tu búsqueda')
         .setDescription('Elige un opción')
 
-    //buttons for the search result
+    // //buttons for the search result
 
     const options = new ActionRowBuilder()
 
@@ -112,7 +112,7 @@ const playSearch = async (interaction) => {
         if(index > 3) return;
         options.addComponents(
             new ButtonBuilder()
-            .setCustomId(item.url)
+            .setCustomId(cleanYoutubeURL(item.url))
             .setLabel( (item.title.length <= 50) ? item.title : item.title.substring(0, 20))
             .setStyle(ButtonStyle.Primary)
         );
@@ -125,14 +125,14 @@ const playSongByButtonEvent = async (interaction) => {
     //check if user is in a voice channel
     if(!interaction.member.voice.channel)
         return interaction.reply({
-            embeds: [prettierMessage('Error', 'Únete primero a un canal de voz, no seas mamon')],
+            embeds: [prettierMessage('Error', 'Únete primero a un canal de voz, no seas mamón')],
         });
     //join to the channel
     await connectToVoiceChannel(interaction);
     interaction.reply({
         embeds: [prettierMessage('Reproduciendo', 'Ok! vamos a reproducir tu canción')],
     });
-    const url = interaction.customId;
+    const url = `https://www.youtube.com/watch?v=${interaction.customId}`;
     console.log(`URL: ${url}`);
     const { fileName, videoTitle} = await downloadFileByYoutubeURL(url);
     console.log('path audio file');
