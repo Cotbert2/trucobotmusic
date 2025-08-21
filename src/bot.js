@@ -1,6 +1,8 @@
 
 const {Client, GatewayIntentBits } = require('discord.js');
+const cronJobs = require('./config/cron/cronjobs.js');
 const dotenv = require('dotenv');
+
 
 const {
     connect, disconnect, play,
@@ -32,7 +34,7 @@ client.on('ready', () => {
 
 
 
-//defaul responses
+//default responses
 
 client.on('messageCreate', async message => {
     greeting(message);
