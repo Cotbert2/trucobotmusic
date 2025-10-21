@@ -1,0 +1,6 @@
+projectKey=lab-js-vanilla
+serverUrl=http://localhost:9000
+serverVersion=25.10.0.114319
+dashboardUrl=http://localhost:9000/dashboard?id=lab-js-vanilla
+ceTaskId=90fddca6-bfc6-454e-9b48-854b78e792cd
+ceTaskUrl=http://localhost:9000/api/ce/task?id=90fddca6-bfc6-454e-9b48-854b78e792cd
