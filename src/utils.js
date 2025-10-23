@@ -11,12 +11,12 @@ const shortName = (name) => {
 }
 
 const isYoutubeLink = (url) => {
-    const regex = new RegExp('^(https://www.youtube.com/watch\\?v=)');
+    const regex = /^(https:\/\/www\.youtube\.com\/watch\?v=)/;
     return (regex.test(url));
 }
 
 const isYoutubeLinkFormMobileDevice = (url) => {
-    const regex = new RegExp('^(https://youtu.be/)');
+    const regex = /^(https:\/\/youtu\.be\/)/;
     return (regex.test(url));
 }
 

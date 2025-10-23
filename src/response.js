@@ -1,7 +1,7 @@
 const { joinVoiceChannel,    AudioPlayerStatus} = require('@discordjs/voice');
 const {ButtonBuilder, EmbedBuilder, ActionRowBuilder,  ButtonStyle } = require('discord.js');
 const { execScrapper } = require('./fetcher');
-const path = require('path');
+const path = require('node:path');
 
 const { isYoutubeLink, isYoutubeLinkFormMobileDevice, prettierMessage , cleanYoutubeURL} = require('./utils');
 
@@ -87,7 +87,6 @@ const play = async (interaction) => {
     console.log(path.join(__dirname,'/../' + fileName + '.mp3'));
     enQueueSong(videoTitle, connection, path.join(__dirname,'/../' + fileName + '.mp3'));
     interaction.followUp(`Listo! he agregado '${videoTitle}' a la cola de reproducción`);
-    //playAudioFile( connection, path.join(__dirname,'/../' + playFile + '.mp3'));
 }
 
 const playSearch = async (interaction) => {
@@ -153,7 +152,7 @@ const connectToVoiceChannel = async (interaction) => {
 }
 
 const skip = async (interaction) => {
-    if(songsQueue.length === 0 && !player.state.status === AudioPlayerStatus.Playing){
+    if(songsQueue.length === 0 && player.state.status !== AudioPlayerStatus.Playing){
         interaction.reply({
             embeds: [prettierMessage(responses_ES.ERROR_TITLE, responses_ES.EMPTY_QUEUE)],
         });
@@ -167,7 +166,7 @@ const skip = async (interaction) => {
 
 const pause = async (interaction) => {
     //check if the player is playing
-    if (!player.state.status === AudioPlayerStatus.Playing){
+    if (player.state.status !== AudioPlayerStatus.Playing){
         interaction.reply({
             embeds: [prettierMessage(responses_ES.ERROR_TITLE, responses_ES.NOT_SONG_PLAYING)],
         });
@@ -180,7 +179,7 @@ const pause = async (interaction) => {
 }
 
 const resume = async (interaction) => {
-    if (!player.state.status === AudioPlayerStatus.Paused){
+    if (player.state.status !== AudioPlayerStatus.Paused){
         interaction.reply({
             embeds: [prettierMessage(responses_ES.ERROR_TITLE, responses_ES.CANNOT_RESUME)],
         });
@@ -197,17 +196,17 @@ const queue = async (interaction) => {
         embeds: [prettierMessage(responses_ES.QUEUE_TITLE, responses_ES.EMPTY_QUEUE_INFO)]
     });
     let response = '';
-    songsQueue.map((song, index) => {
+    for (let index = 0; index < songsQueue.length; index++) {
+        const song = songsQueue[index];
         response += `${index + 1} - ${song.title}\n`;
-        console.log(song)
-    });
+        console.log(song);
+    }
     interaction.reply({
         embeds: [prettierMessage(responses_ES.QUEUE_TITLE, response)]
     });
 }
 
 const clearQueue = async (interaction) => {
-    songsQueue = [];
     interaction.reply({
         embeds: [prettierMessage(responses_ES.QUEUE_TITLE, responses_ES.CLEANED_QUEUE)]
     });

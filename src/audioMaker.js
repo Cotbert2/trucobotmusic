@@ -1,12 +1,11 @@
 //dependencies
 const ytdl = require('youtube-dl-exec');
 const utils = require('./utils');
-const fs = require('fs');
+const fs = require('node:fs');
 const { createAudioPlayer, createAudioResource, NoSubscriberBehavior, AudioPlayerStatus} = require('@discordjs/voice');
 const dotenv = require('dotenv');
 
 dotenv.config();
-//TODO: Check better options to download audio
 
 
 

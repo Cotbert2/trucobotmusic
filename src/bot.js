@@ -38,7 +38,6 @@ client.on('ready', () => {
 
 client.on('messageCreate', async message => {
     greeting(message);
-    //shitpost(message);
 });
 
 

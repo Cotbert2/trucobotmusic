@@ -12,7 +12,6 @@ const openBrowser = async () => {
     if(browser) return;
     browser = await puppeteer.launch(
         {
-            //TODO: change to headless true in production
             headless : true
         });
     page = await browser.newPage();
@@ -28,13 +27,14 @@ const visitPage = async (url) => {
         let videosSeachResult = [];
         const elements = document.querySelectorAll('ytd-video-renderer');
 
-        elements.forEach(element => {
+        //for of
+        for (const element of elements) {
             let video = {
                 title: element.querySelector('#video-title').innerText,
                 url: element.querySelector('#video-title').href
             }
             videosSeachResult.push(video);
-        });
+        }
         return videosSeachResult;
     });
     return videos;
